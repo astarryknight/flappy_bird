@@ -31,12 +31,16 @@ class Bird{
 }
 
 class Pipe{
-    constructor(xPos, baseHeight){
+    constructor(xPos, yPos, baseHeight){
         this.xPos_ = xPos;
+        this.yPos_ = yPos;
         this.baseHeight_ = baseHeight;
     }
     get xPos(){
         return this.xPos_
+    }
+    get yPos(){
+        return this.yPos_
     }
     get baseHeight(){
         return this.baseHeight_
@@ -46,6 +50,9 @@ class Pipe{
     }
     set xPos(xPos){
         this.xPos_ = xPos
+    }
+    set yPos(yPos){
+        this.yPos_ = yPos
     }
 }
 
@@ -63,15 +70,37 @@ function draw(bird) {
 
         //draw bird
         ctx.fillStyle="rgb(200,200,0)";
-        ctx.fillRect(50, bird.yPos, bird.width, bird.width);
+        ctx.fillRect(bird.xPos, bird.yPos, bird.width, bird.width);
 
         //draw pipes
         for (let pipe of pipes){
             ctx.fillStyle="rgb(0,200,0)"
             //top
-            ctx.fillRect(pipe.xPos, canvas.height-(50+pipe.baseHeight), pipe.width, 50+pipe.baseHeight)
-            ctx.fillRect(pipe.xPos, 0, pipe.width, 400-pipe.baseHeight*2);
+            ctx.fillRect(pipe.xPos, pipe.yPos, pipe.width, pipe.baseHeight)
+
+
+            // let A = {
+            //     x: bird.xPos,
+            //     y: bird.yPos,
+            //     w: bird.width,
+            //     h: bird.width,
+            // }
+        
+            // let B = {
+            //     x: pipe.xPos,
+            //     y: pipe.yPos,
+            //     w: pipe.width,
+            //     h: pipe.baseHeight
+            // }
+        
+            // ctx.fillStyle="rgba(100,0,0,0.4)"
+            // ctx.fillRect(A.x, A.y, A.w, A.h);
+        
+            // ctx.fillStyle="rgba(0,0,100,0.4)"
+            // ctx.fillRect(B.x, B.y, B.w, B.h);
         }
+
+        
     }
 }
 
@@ -120,8 +149,11 @@ function loop(){
 }
 
 function generateNewPipe(){
-    pipe = new Pipe(canvas.width,getRandomInt(200));
-    pipes.push(pipe);
+    rand = getRandomInt(200);
+    pipe1 = new Pipe(canvas.width, canvas.height-(50+rand), 50+rand);
+    pipe2 = new Pipe(canvas.width, 0, 400-(rand*2))
+    pipes.push(pipe1);
+    pipes.push(pipe2);
 }
 
 function checkCollisions(){
@@ -130,11 +162,17 @@ function checkCollisions(){
     }
 }
 
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
 function checkPipeCollision(pipe){
-    if((bird.xPos+bird.width)>=(pipe.xPos) && bird.xPos<pipe.xPos+pipe.width){
-        if(bird.yPos+bird.width >= canvas.height-(50+pipe.baseHeight) && bird.yPos <= (400-pipe.baseHeight*2)){
-            alert("HIHIHIHIHIHIIIHIHIHIHIHIHIHIHIH")
-        }
+
+    
+
+    if(bird.xPos < pipe.xPos+pipe.width &&
+        bird.xPos+bird.width > pipe.xPos){
+
+        console.log("hi")            
     }
     return false;
 }
