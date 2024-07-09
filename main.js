@@ -75,9 +75,10 @@ function getRandomInt(max) {
 }
 
 var start=Date.now();
+var pipeTimer=Date.now()
 var upForce=0;
 var bounded = false;
-var pipes=[new Pipe(400, 5)];
+var pipes=[new Pipe(600, 5)];
 
 //main game loop
 function loop(){
@@ -95,23 +96,22 @@ function loop(){
             bird.yPos=canvas.height-birdWidth
         }
 
-        for(i=0;i<pipes.length;i++){
-            pipes[i].xPos-=10
+        for(let i=0;i<pipes.length;i++){
+            pipes[i].xPos-=5.5
         }
-
-        //generate new pipe
-        if((now-start)>=50){
-            generateNewPipe();
-        }
-
-        start=Date.now();
+        start=now;
+    }
+    //generate new pipe
+    if((now-pipeTimer)>=2000){
+        generateNewPipe();
+        pipeTimer=now;
     }
     draw(bird);
     window.requestAnimationFrame(loop);
 }
 
 function generateNewPipe(){
-    pipe = new Pipe(400,5);
+    pipe = new Pipe(canvas.width+100,5);
     pipes.push(pipe);
 }
 
