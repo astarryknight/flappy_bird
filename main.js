@@ -76,29 +76,18 @@ function loop(){
     var now = Date.now();
     if((now-start)>=speed){
         start=Date.now();
-    //     bird.yAcc = upForce-5 //calculate bird's acceleration
-         var bound = 15
-    //     //calculate bird's velocity, bounded by (-bound,bound)
-    //     if(bird.yVel<-bound&&bird.yAcc>0){
-    //         //bird.yVel += bird.yAcc
-    //     } else if(bird.yVel>bound){
-    //         //bird.yVel += bird.yAcc
-    //     } else{
-    //         //bird.yVel += bird.yAcc
-    //     }
-    //     if(bird.yPos<canvas.height-(birdWidth)){
-    //         bird.yPos-=bird.yVel
-    //         //upForce > 0 && (upForce-=.1);
-    //      } // else{
-    //     //     bird.yPos=canvas.height-birdWidth
-    //     // }
-    //    (bird.yVel<-bound || bird.yVel>bound) && (bounded=true)
-    //     document.getElementById("dbg").textContent = bird.yVel
 
-
-
+        var bound = 15
         if(bird.yVel>-bound){bird.yVel+=-1};
         bird.yPos-=bird.yVel
+
+        if(bird.yPos<0){
+            bird.yVel=0
+            bird.yPos=0
+        } else if(bird.yPos>canvas.height-birdWidth){
+            bird.yVel=0
+            bird.yPos=canvas.height-birdWidth
+        }
     }
     draw(bird);
     window.requestAnimationFrame(loop);
@@ -110,10 +99,10 @@ addEventListener("keydown", (event) => {
         return;
     }
     if(event.key==" "){
-        if (bird.yVel<35){
-            bird.yVel+=25
+        if (bird.yVel<20){
+            bird.yVel+=15
         } else{
-            bird.yVel=25 
+            bird.yVel=15 
         }
     }
 });
