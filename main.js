@@ -170,9 +170,10 @@ function checkPipeCollision(pipe){
     
 
     if(bird.xPos < pipe.xPos+pipe.width &&
-        bird.xPos+bird.width > pipe.xPos){
-
-        console.log("hi")            
+        bird.xPos+bird.width > pipe.xPos &&
+        bird.yPos < pipe.yPos + pipe.width && 
+        bird.yPos + bird.width > pipe.yPos){
+            alert("hi")          
     }
     return false;
 }
