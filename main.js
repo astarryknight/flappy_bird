@@ -65,8 +65,12 @@ function draw(bird) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);//clear canvas
 
         //draw background
-        ctx.fillStyle="rgb(0,200,255)";
+        ctx.fillStyle="#4dc0ca";
         ctx.fillRect(0,0,canvas.width, canvas.height);
+
+        var image = new Image();
+        image.src = "./background.png";
+        ctx.drawImage(image, 0, canvas.height-150, canvas.width, 150)
 
         //draw bird
         var image = new Image();
