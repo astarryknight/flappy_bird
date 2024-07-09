@@ -69,38 +69,17 @@ function draw(bird) {
         ctx.fillRect(0,0,canvas.width, canvas.height);
 
         //draw bird
-        ctx.fillStyle="rgb(200,200,0)";
-        ctx.fillRect(bird.xPos, bird.yPos, bird.width, bird.width);
+        var image = new Image();
+        image.src = "./bird2.png";
+        ctx.drawImage(image, bird.xPos, bird.yPos, bird.width, bird.width)
 
         //draw pipes
         for (let pipe of pipes){
-            ctx.fillStyle="rgb(0,200,0)"
-            //top
-            ctx.fillRect(pipe.xPos, pipe.yPos, pipe.width, pipe.baseHeight)
-
-
-            // let A = {
-            //     x: bird.xPos,
-            //     y: bird.yPos,
-            //     w: bird.width,
-            //     h: bird.width,
-            // }
-        
-            // let B = {
-            //     x: pipe.xPos,
-            //     y: pipe.yPos,
-            //     w: pipe.width,
-            //     h: pipe.baseHeight
-            // }
-        
-            // ctx.fillStyle="rgba(100,0,0,0.4)"
-            // ctx.fillRect(A.x, A.y, A.w, A.h);
-        
-            // ctx.fillStyle="rgba(0,0,100,0.4)"
-            // ctx.fillRect(B.x, B.y, B.w, B.h);
-        }
-
-        
+            var image = new Image();
+            image.src = "./pipe.png";
+            (pipe.yPos==0) ? (ctx.drawImage(image, pipe.xPos, pipe.yPos-511+pipe.baseHeight, pipe.width, 511)) : 
+            (ctx.drawImage(image, pipe.xPos, pipe.yPos, pipe.width, 511))
+        }   
     }
 }
 
@@ -116,6 +95,7 @@ var pipeTimer=0
 var upForce=0;
 var bounded = false;
 var pipes=[];
+var gameOver=false;
 
 //main game loop
 function loop(){
@@ -136,7 +116,7 @@ function loop(){
         for(let i=0;i<pipes.length;i++){
             pipes[i].xPos-=5.5
         }
-        checkCollisions();
+        (checkCollisions()) && (gameOver=true);
         start=now;
     }
     //generate new pipe
@@ -145,7 +125,7 @@ function loop(){
         pipeTimer=now;
     }
     draw(bird);
-    window.requestAnimationFrame(loop);
+    !gameOver ? window.requestAnimationFrame(loop) : alert("Game Over!");
 }
 
 function generateNewPipe(){
@@ -158,8 +138,11 @@ function generateNewPipe(){
 
 function checkCollisions(){
     for(let pipe of pipes){
-        checkPipeCollision(pipe);
+        if(checkPipeCollision(pipe)){
+            return true;
+        }
     }
+    return false;
 }
 
 const canvas = document.getElementById("canvas");
@@ -173,7 +156,7 @@ function checkPipeCollision(pipe){
         bird.xPos+bird.width > pipe.xPos &&
         bird.yPos < pipe.yPos + pipe.width && 
         bird.yPos + bird.width > pipe.yPos){
-            alert("hi")          
+            return true;
     }
     return false;
 }
