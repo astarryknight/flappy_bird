@@ -13,6 +13,12 @@ class Bird{
     get yAcc(){
         return this.yAcc_
     }
+    get xPos(){
+        return 100
+    }
+    get width(){
+        return 50
+    }
     set yPos(yPos){
         this.yPos_ = yPos;
     }
@@ -35,14 +41,15 @@ class Pipe{
     get baseHeight(){
         return this.baseHeight_
     }
+    get width(){
+        return 75;
+    }
     set xPos(xPos){
         this.xPos_ = xPos
     }
 }
 
 var bird = new Bird(100,1,0);
-var birdWidth = 50
-var pipeWidth = 75
 
 function draw(bird) {
     const canvas = document.getElementById("canvas");
@@ -56,13 +63,14 @@ function draw(bird) {
 
         //draw bird
         ctx.fillStyle="rgb(200,200,0)";
-        ctx.fillRect(50, bird.yPos, birdWidth, birdWidth);
+        ctx.fillRect(50, bird.yPos, bird.width, bird.width);
 
         //draw pipes
         for (let pipe of pipes){
             ctx.fillStyle="rgb(0,200,0)"
-            //pipes[i]
-            ctx.fillRect(pipe.xPos, canvas.height-75, pipeWidth, 75)
+            //top
+            ctx.fillRect(pipe.xPos, canvas.height-(50+pipe.baseHeight), pipe.width, 50+pipe.baseHeight)
+            ctx.fillRect(pipe.xPos, 0, pipe.width, 400-pipe.baseHeight*2);
         }
     }
 }
@@ -75,10 +83,10 @@ function getRandomInt(max) {
 }
 
 var start=Date.now();
-var pipeTimer=Date.now()
+var pipeTimer=0
 var upForce=0;
 var bounded = false;
-var pipes=[new Pipe(600, 5)];
+var pipes=[];
 
 //main game loop
 function loop(){
@@ -91,14 +99,15 @@ function loop(){
         if(bird.yPos<0){
             bird.yVel=0
             bird.yPos=0
-        } else if(bird.yPos>canvas.height-birdWidth){
+        } else if(bird.yPos>canvas.height-bird.width){
             bird.yVel=0
-            bird.yPos=canvas.height-birdWidth
+            bird.yPos=canvas.height-bird.width
         }
 
         for(let i=0;i<pipes.length;i++){
             pipes[i].xPos-=5.5
         }
+        checkCollisions();
         start=now;
     }
     //generate new pipe
@@ -111,8 +120,23 @@ function loop(){
 }
 
 function generateNewPipe(){
-    pipe = new Pipe(canvas.width+100,5);
+    pipe = new Pipe(canvas.width,getRandomInt(200));
     pipes.push(pipe);
+}
+
+function checkCollisions(){
+    for(let pipe of pipes){
+        checkPipeCollision(pipe);
+    }
+}
+
+function checkPipeCollision(pipe){
+    if((bird.xPos+bird.width)>=(pipe.xPos) && bird.xPos<pipe.xPos+pipe.width){
+        if(bird.yPos+bird.width >= canvas.height-(50+pipe.baseHeight) && bird.yPos <= (400-pipe.baseHeight*2)){
+            alert("HIHIHIHIHIHIIIHIHIHIHIHIHIHIHIH")
+        }
+    }
+    return false;
 }
 
 //handling keypresses
@@ -121,11 +145,7 @@ addEventListener("keydown", (event) => {
         return;
     }
     if(event.key==" "){
-        if (bird.yVel<25){
-            bird.yVel+=19
-        } else{
-            bird.yVel=19
-        }
+        bird.yVel=11
     }
 });
 
