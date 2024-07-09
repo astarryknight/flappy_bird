@@ -42,6 +42,7 @@ class Pipe{
 
 var bird = new Bird(100,1,0);
 var birdWidth = 50
+var pipeWidth = 75
 
 function draw(bird) {
     const canvas = document.getElementById("canvas");
@@ -56,6 +57,13 @@ function draw(bird) {
         //draw bird
         ctx.fillStyle="rgb(200,200,0)";
         ctx.fillRect(50, bird.yPos, birdWidth, birdWidth);
+
+        //draw pipes
+        for (let pipe of pipes){
+            ctx.fillStyle="rgb(0,200,0)"
+            //pipes[i]
+            ctx.fillRect(pipe.xPos, canvas.height-75, pipeWidth, 75)
+        }
     }
 }
 
@@ -69,14 +77,12 @@ function getRandomInt(max) {
 var start=Date.now();
 var upForce=0;
 var bounded = false;
-
+var pipes=[new Pipe(400, 5)];
 
 //main game loop
 function loop(){
     var now = Date.now();
     if((now-start)>=speed){
-        start=Date.now();
-
         var bound = 15
         if(bird.yVel>-bound){bird.yVel+=-1};
         bird.yPos-=bird.yVel
@@ -88,9 +94,25 @@ function loop(){
             bird.yVel=0
             bird.yPos=canvas.height-birdWidth
         }
+
+        for(i=0;i<pipes.length;i++){
+            pipes[i].xPos-=10
+        }
+
+        //generate new pipe
+        if((now-start)>=50){
+            generateNewPipe();
+        }
+
+        start=Date.now();
     }
     draw(bird);
     window.requestAnimationFrame(loop);
+}
+
+function generateNewPipe(){
+    pipe = new Pipe(400,5);
+    pipes.push(pipe);
 }
 
 //handling keypresses
@@ -99,10 +121,10 @@ addEventListener("keydown", (event) => {
         return;
     }
     if(event.key==" "){
-        if (bird.yVel<20){
-            bird.yVel+=15
+        if (bird.yVel<25){
+            bird.yVel+=19
         } else{
-            bird.yVel=15 
+            bird.yVel=19
         }
     }
 });
