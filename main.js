@@ -125,7 +125,12 @@ function loop(){
         pipeTimer=now;
     }
     draw(bird);
-    !gameOver ? window.requestAnimationFrame(loop) : alert("Game Over!");
+    if(!gameOver){
+        window.requestAnimationFrame(loop)
+    } else{
+        alert("Game Over!");
+        location.reload();
+    }
 }
 
 function generateNewPipe(){
